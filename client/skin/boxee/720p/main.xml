@@ -3,6 +3,9 @@
 <onload lang="python"><![CDATA[
 import stopcensorship
 import mc
+import tracker
+
+myTracker = tracker.Tracker()
 
 config = mc.GetApp().GetLocalConfig()
 
@@ -16,6 +19,8 @@ else:
     mc.GetActiveWindow().GetEdit(201).SetText("Telephone")
     mc.GetActiveWindow().GetEdit(202).SetText("Zipcode")
     mc.GetActiveWindow().GetControl(201).SetFocus()
+
+myTracker.trackView("Home")
 ]]></onload>
 	<defaultcontrol always="true">200</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
@@ -54,6 +59,7 @@ else:
                     <ontextchange lang="python"><![CDATA[
 field = mc.GetActiveWindow().GetEdit(201).GetText()
 if "Telephon" in field: 
+    myTracker.trackEvent("Navigation", "Edit", "Clear Telephone")
     mc.GetActiveWindow().GetEdit(201).SetText("")
 ]]></ontextchange>
                 </control>
@@ -72,6 +78,7 @@ if "Telephon" in field:
                     <ontextchange lang="python"><![CDATA[
 field = mc.GetActiveWindow().GetEdit(202).GetText()
 if "Zipcod" in field: 
+    myTracker.trackEvent("Navigation", "Edit", "Clear Zipcode")
     mc.GetActiveWindow().GetEdit(202).SetText("")
 ]]></ontextchange>
                 </control>
@@ -94,13 +101,17 @@ if "Zipcod" in field:
 telephone = mc.GetActiveWindow().GetEdit(201).GetText()
 zipcode = mc.GetActiveWindow().GetEdit(202).GetText()
 if len(str(zipcode)) == 0:
-	mc.ShowDialogOk("ZIP Code Empty", "You did not input your ZIP code. Please try again.")
+    mc.ShowDialogOk("ZIP Code Empty", "You did not input your ZIP code. Please try again.")
+    myTracker.trackEvent("Error", "Edit", "Zipcode Empty")
 elif len(str(telephone)) == 0:
-	mc.ShowDialogOk("Telephone Empty", "You did not input your telephone number. Please try again.")
+    mc.ShowDialogOk("Telephone Empty", "You did not input your telephone number. Please try again.")
+    myTracker.trackEvent("Error", "Edit", "Telephone Empty")
 elif len(str(zipcode)) != 5:
-	mc.ShowDialogOk("ZIP Code", "Your ZIP code did not have 5 digits. Please try again.")
+    mc.ShowDialogOk("ZIP Code", "Your ZIP code did not have 5 digits. Please try again.")
+    myTracker.trackEvent("Error", "Edit", "Zipcode Incorrect")
 elif len(str(telephone)) != 10:
-	mc.ShowDialogOk("Telephone", "Your telephone number should have ten digits only.  Please try again.")
+    mc.ShowDialogOk("Telephone", "Your telephone number should have ten digits only.  Please try again.")
+    myTracker.trackEvent("Error", "Edit", "Telephone Incorrect")
 else:
     mc.ShowDialogWait()
     config = mc.GetApp().GetLocalConfig()
@@ -117,10 +128,12 @@ else:
         response = False
     if not response:
         mc.ShowDialogOk("Error", "There was an error placing your call.  Please try again later")
+        myTracker.trackEvent("Error", "Call", "Call Error")
     else:
-        mc.ShowDialogOk("Thank you", "Thank you for helping save the Internet.")
+        mc.ShowDialogOk("Thank you", "Thank you for helping save the Internet. A call will be made to your phone shortly.")
         mc.GetActiveWindow().GetControl(100).SetVisible(False)
         mc.GetActiveWindow().GetControl(101).SetVisible(True)
+        myTracker.trackEvent("Navigation", "Call", "Call Successful")
     mc.HideDialogWait()
 ]]></onclick>
 		    </control>
