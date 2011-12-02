@@ -1,0 +1,17 @@
+<app>
+  <id>tv.gonzee.stopcensorship</id>
+  <name>Stop Censorship</name>
+  <version>1.0</version>
+  <description>The Internet we know and love is at risk.  Help save it.</description>
+  <thumb>http://apps.gonzee.tv/stopcensorship/images/thumb.png</thumb>
+  <repository>http://dir.boxee.tv/apps</repository>
+  <media>video</media>
+  <copyright>Boxee, Inc.</copyright>
+  <email>support@boxee.tv</email>
+  <type>skin</type>
+  <startWindow>14000</startWindow>
+  <platform>all</platform>
+  <minversion>0.9.11</minversion>
+  <test-app>true</test-app>
+  <country-allow>us</country-allow>
+</app>

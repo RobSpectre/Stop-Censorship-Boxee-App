@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<window type="window" id="14000">
+<onload lang="python"><![CDATA[
+import stopcensorship
+import mc
+
+config = mc.GetApp().GetLocalConfig()
+config.ResetAll()
+
+if config.GetValue("telephone"):
+    telephone = config.GetValue("telephone")
+    zipcode = config.GetValue("zipcode")
+    mc.GetActiveWindow().GetEdit(201).SetText(telephone)
+    mc.GetActiveWindow().GetEdit(202).SetText(zipcode)
+    mc.GetActiveWindow().GetControl(210).SetFocus()
+else:
+    mc.GetActiveWindow().GetEdit(201).SetText("Telephone")
+    mc.GetActiveWindow().GetEdit(202).SetText("Zipcode")
+    mc.GetActiveWindow().GetControl(201).SetFocus()
+]]></onload>
+	<defaultcontrol always="true">200</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<controls>
+		<control type="group">
+    		<control type="image">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>1280</width>
+				<height>720</height>
+				<texture>main.png</texture>
+			</control>
+		</control>
+        <control type="group" id="100">
+			<control type="grouplist" id="200">
+				<onright>210</onright>
+				<description>Input Boxes</description>
+				<posx>110</posx>
+				<posy>580</posy>
+				<width>747</width>
+				<height>60</height>
+				<itemgap>90</itemgap>
+                <orientation>horizontal</orientation>
+				<control type="edit" id="201">
+                    <description>Telephone</description>
+					<width>350</width>
+					<height>60</height>
+                    <align>left</align>
+                    <aligny>center</aligny>
+                    <textoffset>5</textoffset>
+                    <font>font48</font>
+                    <textcolor>grey</textcolor>
+                    <focusedcolor>black</focusedcolor>
+					<texturefocus>input-focused.png</texturefocus>
+					<texturenofocus>input.png</texturenofocus>
+                    <ontextchange lang="python"><![CDATA[
+field = mc.GetActiveWindow().GetEdit(201).GetText()
+if "Telephon" in field: 
+    mc.GetActiveWindow().GetEdit(201).SetText("")
+]]></ontextchange>
+                </control>
+				<control type="edit" id="202">
+                    <description>Zip Code</description>
+					<width>300</width>
+					<height>60</height>
+                    <align>left</align>
+                    <aligny>center</aligny>
+                    <textoffset>5</textoffset>
+                    <font>font48</font>
+                    <textcolor>grey</textcolor>
+                    <focusedcolor>black</focusedcolor>
+					<texturefocus>input-focused.png</texturefocus>
+					<texturenofocus>input.png</texturenofocus>
+                    <ontextchange lang="python"><![CDATA[
+field = mc.GetActiveWindow().GetEdit(202).GetText()
+if "Zipcod" in field: 
+    mc.GetActiveWindow().GetEdit(202).SetText("")
+]]></ontextchange>
+                </control>
+			</control>
+			<control type="button" id="210">
+				<onleft>200</onleft>
+				<posx>921</posx>
+				<posy>580</posy>
+				<width>250</width>
+				<height>60</height>
+                <label>[UPPERCASE]Call Congress[/UPPERCASE]</label>
+                <align>center</align> 
+                <aligny>center</aligny>
+                <font>font28</font>
+                <textcolor>black</textcolor>
+                <focusedcolor>white</focusedcolor>
+                <texturefocus border="4" diffuse="masks/00bca4.png">button_4_pixel.png</texturefocus>
+                <texturenofocus border="4" diffuse="masks/007768.png">button_4_pixel.png</texturenofocus>
+                <onclick lang="python"><![CDATA[
+telephone = mc.GetActiveWindow().GetEdit(201).GetText()
+zipcode = mc.GetActiveWindow().GetEdit(202).GetText()
+if len(str(zipcode)) == 0:
+	mc.ShowDialogOk("ZIP Code Empty", "You did not input your ZIP code. Please try again.")
+elif len(str(telephone)) == 0:
+	mc.ShowDialogOk("Telephone Empty", "You did not input your telephone number. Please try again.")
+elif len(str(zipcode)) != 5:
+	mc.ShowDialogOk("ZIP Code", "Your ZIP code did not have 5 digits. Please try again.")
+elif len(str(telephone)) != 10:
+	mc.ShowDialogOk("Telephone", "Your telephone number should have ten digits only.  Please try again.")
+else:
+    mc.ShowDialogWait()
+    config = mc.GetApp().GetLocalConfig()
+    config.SetValue("zipcode", zipcode)
+    config.SetValue("telephone", telephone)
+    params = {
+        'mconnect': "14281",
+        'person_phone': telephone,
+        'postal_code': zipcode
+    }
+    try:
+        response = stopcensorship.request(params, debug=True)
+    except:
+        response = False
+    if not response:
+        mc.ShowDialogOk("Error", "There was an error placing your call.  Please try again later")
+    else:
+        mc.ShowDialogOk("Thank you", "Thank you for helping save the Internet.")
+        mc.GetActiveWindow().GetControl(100).SetVisible(False)
+        mc.GetActiveWindow().GetControl(101).SetVisible(True)
+    mc.HideDialogWait()
+]]></onclick>
+		    </control>
+        </control>
+        <control type="group" id="101">
+            <visible>false</visible>
+            <control type="label">
+                <posy>600</posy>
+                <width>1280</width>
+                <height>32</height>
+                <align>center</align>
+                <font>font48</font>
+                <label>Thank You</label>
+                <textcolor>white</textcolor>
+            </control>
+        </control>
+	</controls>
+</window>
