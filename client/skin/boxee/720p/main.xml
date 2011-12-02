@@ -5,7 +5,6 @@ import stopcensorship
 import mc
 
 config = mc.GetApp().GetLocalConfig()
-config.ResetAll()
 
 if config.GetValue("telephone"):
     telephone = config.GetValue("telephone")
