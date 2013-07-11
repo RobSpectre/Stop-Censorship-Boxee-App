@@ -72,3 +72,7 @@ Wiki](http://developer.boxee.tv/Applications#Debugging).
 ## License
 
 * [Mozilla Public License](http://www.mozilla.org/MPL/) 
+
+[![githalytics.com
+alpha](https://cruel-carlota.pagodabox.com/66361dd754066bd5b5de64914d99bed3
+"githalytics.com")](http://githalytics.com/RobSpectre/Stop-Censorship-Boxee-App)
